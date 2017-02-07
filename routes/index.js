@@ -1,43 +1,22 @@
 var express = require('express');
-var router = express.Router();
+var Movie   = require('../models/movie');
+var router  = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { 
-    title: 'Imooc 首页',
-    movies: [
+router.get('/', function(req, res, next) 
+{
+    // 查询数据库 获取数据
+    Movie.fetch(function(err,movies) 
+    {
+        if(err) {
+            console.log(err);
+        }
+        res.render('index', 
         {
-            title: '机械战警',
-            _id: 1,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-        {
-            title: '机械战警',
-            _id: 2,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-        {
-            title: '机械战警',
-            _id: 3,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-        {
-            title: '机械战警',
-            _id: 4,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-        {
-            title: '机械战警',
-            _id: 5,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-        {
-            title: '机械战警',
-            _id: 6,
-            poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-        },
-    ]
-   });
+          title: 'Imooc 首页',
+          movies: movies
+        });
+    });
 });
 
 module.exports = router;

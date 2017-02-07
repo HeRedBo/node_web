@@ -4,14 +4,21 @@ var favicon = require('serve-favicon');
 var logger  = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-
-
-
+var mongoose     = require('mongoose');
+mongoose.Promise = require('bluebird');
+var movie  = require('./models/Movie');
+var _      = require('underscore');
 var app = express();
+
+mongoose.connect('mongodb://localhost/imooc');
+mongoose.connection.on('connected', function() 
+{
+  console.log('Mongoose Connection Success!');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages')); // 指定视图文件路径
-//app.set('views', 'views/pages'); // 指定视图文件路径
+//app.set('views', './views/pages'); // 指定视图文件路径
 app.set('view engine', 'jade'); // 设置视图模板引擎
 
 // uncomment after placing your favicon in /public
@@ -19,11 +26,11 @@ app.set('view engine', 'jade'); // 设置视图模板引擎
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-//app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.locals.moment = require('moment');
 
 var routes = require('./routes/index');
 var users  = require('./routes/users');
@@ -36,7 +43,8 @@ app.use('/movie', movie);
 app.use('/admin', admin);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function(req, res, next) 
+{
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -46,10 +54,13 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+if (app.get('env') === 'development') 
+{
+  app.use(function(err, req, res, next) 
+  {
     res.status(err.status || 500);
-    res.render('error', {
+    res.render('error', 
+    {
       message: err.message,
       error: err
     });
@@ -58,13 +69,14 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res, next) 
+{
   res.status(err.status || 500);
-  res.render('error', {
+  res.render('error', 
+  {
     message: err.message,
     error: {}
   });
 });
-
 
 module.exports = app;

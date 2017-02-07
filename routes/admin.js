@@ -1,18 +1,25 @@
 var express = require('express');
-var router = express.Router();
+var Movie   = require('../models/movie');
+var _       = require('underscore');
+var router  = express.Router();
 
 /* GET movie home listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res, next) 
+{
   res.render('admin', { title: 'Movie' });
 });
 
 /* GET admin page listing */
-router.get('/movie', function(req, res, next) {
-    res.render('admin', { 
+router.get('/movie', function(req, res, next) 
+{
+    res.render('admin', 
+    {
         title: 'imooc 后台录入' ,
         movie :{
             title : '',
             language : '',
+            doctor : '',
+            country : '',
             poster : '',
             year : '',
             flash : '',
@@ -20,23 +27,110 @@ router.get('/movie', function(req, res, next) {
     }});
 });
 
-/* GET admin list page listring */
-router.get('/list', function(req, res, next) {
-    res.render('list', { 
-        title: 'imooc 后台数据列表' ,
-        movies : [{
-                    _id : 1,
-                    doctor : '何塞·帕迪里亚',
-                    title  : '机械战警',
-                    country: '美国',
-                    year   : '2014',
-                    poster: 'http://r3.ykimg.com/05160000530EEB63675839160D0B79D5',
-                    language :'英语',
-                    flash : 'http://player.youku.com/player.php/sid/XNjA1Njc0NTUy/v.swf',
-                    summary: '《机械战警》是由何塞·帕迪里亚执导，乔尔·金纳曼、塞缪尔·杰克逊、加里·奥德曼等主演的一部科幻电影，改编自1987年保罗·范霍文执导的同名电影。影片于2014年2月12日在美国上映，2014年2月28日在中国大陆上映。影片的故事背景与原版基本相同，故事设定在2028年的底特律，男主角亚历克斯·墨菲是一名正直的警察，被坏人安装在车上的炸弹炸成重伤，为了救他，OmniCorp公司将他改造成了生化机器人“机器战警”，代表着美国司法的未来。'
-                }]
+/* POST admin page movie*/
+router.post('/movie/new', function(req, res, next) 
+{
+    var id       = req.body.movie._id;
+    var movieObj = req.body.movie;
+    var _movie;
+    if(id !== 'undefined') 
+    {
+        Movie.findById(id, function(err, movie) {
+            if(err) 
+            {
+                console.log(err);
+            }
+            _movie = _.extend(movie, movieObj);
+            _movie.save(function(err, movie) {
+                if(err) {
+                    console.log(err);
+                }
+                console.log('131231213')
+                console.log(movie);
+                res.redirect('/movie/' + movie._id);
+            });
+        });
+    } 
+    else
+    {
+        _movie = new Movie({
+            title    : movieObj.title,
+            doctor   : movieObj.doctor,
+            language : movieObj.language,
+            country  : movieObj.country,
+            year     : movieObj.year,
+            poster   : movieObj.poster,
+            flash    : movieObj.flash,
+            summary  : movieObj.summary
+        });
+        _movie.save(function (err, movie) 
+        {
+            if(err) {
+                console.log(err);
+            }
+            res.redirect('/movie/' + movie._id);
+        });
+    }
+});
+
+/* GET admin update listeniing */
+router.get('/update/:id' , function(req, res, next)
+{
+    var id =req.params.id;
+    if(id)
+    {
+        Movie.findById(id, function(err, movie) 
+        {
+            if(err)
+            {
+                console.log(err);
+            }
+            res.render('admin',
+            {
+                title : '后台更新',
+                movie : movie
+            })
+        });
+    }
+});
+/* GET admin list page listening */
+router.get('/list', function(req, res, next) 
+{
+    Movie.fetch(function(err, movies)
+    {
+        if (err)
+        {
+            console.log(err);
+        }
+        res.render('list', {
+            title: 'imooc 后台数据列表',
+            movies : movies
+        });
     });
 });
 
+// //delete 
+router.delete('/list', function(req, res, next)
+{
+    var id = req.query.id;
+    if(id) {
+        Movie.remove({
+            _id : id
+        }, function(err, movie) 
+        {
+            if(err) 
+            {
+                console.log(err);
+            } 
+            else 
+            {
+                res.json({
+                    success : 1
+                });
+            }
+
+        });
+    }
+});
 
 module.exports = router;
