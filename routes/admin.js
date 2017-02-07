@@ -45,8 +45,6 @@ router.post('/movie/new', function(req, res, next)
                 if(err) {
                     console.log(err);
                 }
-                console.log('131231213')
-                console.log(movie);
                 res.redirect('/movie/' + movie._id);
             });
         });

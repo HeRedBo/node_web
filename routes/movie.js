@@ -5,7 +5,6 @@ var router  = express.Router();
 /* GET detail page */
 router.get('/:id', function(req, res, next) {
     var id = req.params.id;
-    console.log('nodeID : ' + id);
     Movie.findById(id,function(err, movie) 
     {
         if(err) 
