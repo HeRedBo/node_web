@@ -1,5 +1,6 @@
 var express = require('express');
 var Movie   = require('../models/movie');
+var User    = require('../models/user');
 var _       = require('underscore');
 var router  = express.Router();
 
@@ -127,6 +128,42 @@ router.delete('/list', function(req, res, next)
                 });
             }
 
+        });
+    }
+});
+
+/* GET admin list page listening */
+router.get('/userlist', function(req, res, next) 
+{
+    User.fetch(function(err, users)
+    {
+        if (err)
+        {
+            console.log(err);
+        }
+        res.render('userlist', {
+            title: 'imooc 用户列表',
+            users : users
+        });
+    });
+});
+
+// user delete 
+router.delete('/userlist', function(req, res, next)
+{
+    var id = req.query.id;
+    if(id) 
+    {
+        User.remove({
+            _id : id
+        }, function(err, user) {
+            if(err) {
+                console.log(err);
+            } else {
+                res.json({
+                    success : 1
+                });
+            }
         });
     }
 });

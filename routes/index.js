@@ -5,6 +5,8 @@ var router  = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) 
 {
+    console.log('session : ');
+    console.log(req.session);
     // 查询数据库 获取数据
     Movie.fetch(function(err,movies) 
     {
