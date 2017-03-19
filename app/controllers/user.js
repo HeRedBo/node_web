@@ -25,17 +25,12 @@ module.exports = {
         console.log(err);
       }
 
-      if(user) 
-      {
+      if(user) {
         return res.redirect('/');
-      }
-      else
-      {
+      } else {
          var user = new User(_user);
-         user.save(function(err, user) 
-         {
-            if(err) 
-            {
+         user.save(function(err, user) {
+            if(err) {
               console.log(err);
             }
             res.redirect('/');
@@ -52,13 +47,11 @@ module.exports = {
 
       User.findOne({name: _user.name}, function(err, user) 
       {
-        if(err) 
-        {
+        if(err) {
           console.log(err);
         }
 
-        if(!user) 
-        {
+        if(!user) {
             return res.redirect('/signup');
         }
         user.comparePassword(password, function(err, isMatch) 

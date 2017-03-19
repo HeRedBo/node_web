@@ -23,7 +23,6 @@ module.exports = {
                 .populate('reply.from reply.to', 'name')
                 .exec(function(err, comments) 
                 {
-                    
                     res.render('detail', {
                         title: '详情页' + movie.title,
                         movie: movie,

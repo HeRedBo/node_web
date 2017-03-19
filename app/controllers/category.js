@@ -20,13 +20,13 @@ module.exports = {
         if(id)
         {
             Category.findById(id, function(err, category){
-                if(err) 
+                if(err)
                 {
                     console.log(err);
                 }
                 _category = _.extend(category, _category);
                 _category.save(function(err, category){
-                    if(err) 
+                    if(err)
                     {
                         console.log(err);
                     }
@@ -49,14 +49,12 @@ module.exports = {
             });
         }
     },
-        
-        
 
     list : function (req, res)
     {
         Category.fetch(function(err, categories)
         {
-            if(err) 
+            if(err)
             {
                 console.log(err);
             }
@@ -68,18 +66,18 @@ module.exports = {
         })
     },
 
-    del : function(req, res) 
+    del : function(req, res)
     {
         var id = req.query.id;
-        if(id) 
+        if(id)
         {
-            Category.remove({_id : id }, function(err, cateory) 
+            Category.remove({_id : id }, function(err, cateory)
             {
-                if(err) 
+                if(err)
                 {
                     console.log(err);
-                } 
-                else 
+                }
+                else
                 {
                     res.json({
                         success : 1
@@ -94,7 +92,7 @@ module.exports = {
         var id =req.params.id;
         if(id)
         {
-            Category.findById(id, function(err, category) 
+            Category.findById(id, function(err, category)
             {
                 if(err)
                 {
@@ -110,6 +108,3 @@ module.exports = {
     },
 
 }
-
-
-

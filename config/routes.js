@@ -7,21 +7,21 @@ var Category = require('../app/controllers/category');
 module.exports = function(app)
 {
     // pre handle user
-    app.use(function(req, res, next) 
+    app.use(function(req, res, next)
     {
         var _user = req.session.user;
         app.locals.user = _user;
         next();
     });
-    // Index page 
+    // Index page
     app.get('/',Index.index);
-    // User 
+    // User
     app.get('/signin', User.showSignin);
     app.get('/signup', User.showSignup);
     app.get('/user/logout', User.logout);
     app.get('/admin/user/list', User.signinRequired, User.adminRequired, User.list);
     app.post('/user/signup',User.signup);
-    app.post('/user/signin', User.signin); 
+    app.post('/user/signin', User.signin);
 
     // Movies
     app.get('/movie/:id',Movie.detail);
@@ -31,14 +31,16 @@ module.exports = function(app)
     app.post('/admin/movie/save', User.signinRequired, User.adminRequired, Movie.save);
     app.delete('/admin/movie/list',  User.signinRequired, User.adminRequired, Movie.del);
 
-    // Comment 
+    // Comment
     app.post('/user/comment',User.signinRequired, Comment.save);
 
-    // Category 
+    // Category
     app.get('/admin/category/create', User.signinRequired, User.adminRequired, Category.create);
     app.get('/admin/category/list', User.signinRequired, User.adminRequired,Category.list);
     app.get('/admin/category/update/:id', User.signinRequired, User.adminRequired,Category.update);
     app.post('/admin/category/save', User.signinRequired, User.adminRequired, Category.save);
-    app.delete('/admin/category/list',User.signinRequired, User.adminRequired,Category.del)
-    
+    app.delete('/admin/category/list',User.signinRequired, User.adminRequired,Category.del);
+
+    // results
+    app.get('/results', Index.search); 
 }
